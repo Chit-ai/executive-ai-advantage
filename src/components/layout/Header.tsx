@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Modules", href: "/modules" },
+  { name: "Tools", href: "/tools" },
   { name: "Prompt Library", href: "/prompts" },
   { name: "Case Studies", href: "/cases" },
 ];
@@ -23,8 +24,8 @@ export function Header() {
             <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif text-lg font-semibold text-foreground">AI for Leaders</span>
-            <span className="text-xs text-muted-foreground -mt-0.5">Executive Training</span>
+            <span className="font-serif text-lg font-semibold text-foreground tracking-wide">VANTAGE</span>
+            <span className="text-xs text-muted-foreground -mt-0.5">Executive AI Platform</span>
           </div>
         </Link>
 

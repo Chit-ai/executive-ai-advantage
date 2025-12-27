@@ -12,10 +12,10 @@ export function Footer() {
               <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
-              <span className="font-serif text-lg font-semibold">AI for Leaders</span>
+              <span className="font-serif text-lg font-semibold tracking-wide">VANTAGE</span>
             </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Empowering senior executives to harness AI for strategic decision-making using free tools.
+              Empowering senior executives to harness AI for strategic decision-making through VANTAGE point intelligence.
             </p>
           </div>
 
@@ -36,7 +36,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link to="/prompts" className="text-primary-foreground/70 hover:text-gold transition-colors text-sm">Prompt Library</Link></li>
               <li><Link to="/cases" className="text-primary-foreground/70 hover:text-gold transition-colors text-sm">Case Studies</Link></li>
-              <li><Link to="/" className="text-primary-foreground/70 hover:text-gold transition-colors text-sm">Tool Directory</Link></li>
+              <li><Link to="/tools" className="text-primary-foreground/70 hover:text-gold transition-colors text-sm">Tool Directory</Link></li>
               <li><Link to="/" className="text-primary-foreground/70 hover:text-gold transition-colors text-sm">Certification</Link></li>
             </ul>
           </div>
@@ -56,14 +56,14 @@ export function Footer() {
               </a>
             </div>
             <p className="text-primary-foreground/70 text-sm">
-              contact@aiforleaders.com
+              contact@vantage-ai.com
             </p>
           </div>
         </div>
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-primary-foreground/50 text-sm">
-            © 2024 AI for Senior Leaders. All rights reserved.
+            © 2024 VANTAGE. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-primary-foreground/50 hover:text-gold text-sm transition-colors">Privacy Policy</a>

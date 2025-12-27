@@ -4,71 +4,11 @@ import { ArrowRight, Brain, Factory, Truck, ClipboardList, TrendingUp, Clock, Bo
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-
-const modules = [
-  {
-    id: "foundations",
-    title: "AI Foundations for Leaders",
-    subtitle: "Level 1 • Essential",
-    description: "Understand what AI can and cannot do. Learn the fundamentals of AI thinking, tokens, context windows, and hallucination management. Build a strategic framework for AI as your executive co-pilot.",
-    icon: Brain,
-    color: "from-violet-500 to-purple-600",
-    duration: "3 hours",
-    lessons: 8,
-    topics: ["AI Literacy", "How AI Thinks", "Prompt Engineering Basics", "Risk & Governance", "Executive Co-Pilot Framework"],
-    tools: ["ChatGPT", "Google Gemini", "Claude"],
-  },
-  {
-    id: "operations",
-    title: "AI for Operations Excellence",
-    subtitle: "Level 2 • Operations",
-    description: "Identify bottlenecks, optimize SOPs, and detect cost leakages using AI-powered analysis. Learn to transform raw process data into actionable improvement roadmaps.",
-    icon: Factory,
-    color: "from-blue-500 to-cyan-600",
-    duration: "4 hours",
-    lessons: 10,
-    topics: ["Bottleneck Identification", "SOP Optimization", "Root Cause Analysis", "Cost Leakage Detection", "KPI Dashboard Creation"],
-    tools: ["ChatGPT", "Google Sheets", "Looker Studio"],
-  },
-  {
-    id: "supply-chain",
-    title: "AI for Supply Chain Management",
-    subtitle: "Level 2 • SCM",
-    description: "Master demand forecasting, inventory optimization, and supplier risk analysis. Build scenario simulations for best and worst case planning using only free tools.",
-    icon: Truck,
-    color: "from-emerald-500 to-teal-600",
-    duration: "4 hours",
-    lessons: 12,
-    topics: ["Demand Forecasting", "Inventory Optimization", "Supplier Risk Analysis", "Logistics Cost Control", "Scenario Simulation"],
-    tools: ["Gemini", "Google Sheets", "Power BI Desktop"],
-  },
-  {
-    id: "project-management",
-    title: "AI for Project Management",
-    subtitle: "Level 2 • PMO",
-    description: "Prevent timeline slippage, manage resource allocation, and automate risk identification. Generate AI-powered RAID logs and executive status reports automatically.",
-    icon: ClipboardList,
-    color: "from-orange-500 to-amber-600",
-    duration: "3.5 hours",
-    lessons: 9,
-    topics: ["Timeline Risk Detection", "Resource Optimization", "RAID Log Automation", "Executive Reporting", "Milestone Tracking"],
-    tools: ["Notion", "Trello", "GitHub Projects"],
-  },
-  {
-    id: "sales",
-    title: "AI for Sales & Revenue",
-    subtitle: "Level 2 • Sales",
-    description: "Qualify leads faster, forecast pipelines accurately, and personalize pitches with AI assistance. Create automated email sequences and win-loss analysis reports.",
-    icon: TrendingUp,
-    color: "from-rose-500 to-pink-600",
-    duration: "4 hours",
-    lessons: 11,
-    topics: ["Lead Qualification", "Pipeline Forecasting", "Pitch Personalization", "Objection Handling", "Win-Loss Analysis"],
-    tools: ["HubSpot Free", "Canva AI", "Google Docs"],
-  },
-];
+import { modulesData } from "@/data/modules";
 
 const Modules = () => {
+  const modules = Object.values(modulesData);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -121,7 +61,7 @@ const Modules = () => {
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <BookOpen className="w-4 h-4" />
-                            <span>{module.lessons} lessons</span>
+                            <span>{module.lessonsCount} lessons</span>
                           </div>
                         </div>
                       </div>
@@ -138,16 +78,16 @@ const Modules = () => {
                           {module.description}
                         </p>
 
-                        {/* Topics */}
+                        {/* Topics - Derived from learning objectives for preview */}
                         <div className="mb-6">
-                          <h4 className="text-sm font-medium text-foreground mb-2">Key Topics</h4>
+                          <h4 className="text-sm font-medium text-foreground mb-2">Key Objectives</h4>
                           <div className="flex flex-wrap gap-2">
-                            {module.topics.map((topic) => (
+                            {module.learningObjectives.slice(0, 3).map((topic, i) => (
                               <span
-                                key={topic}
+                                key={i}
                                 className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-muted-foreground"
                               >
-                                {topic}
+                                {topic.length > 30 ? topic.substring(0, 30) + "..." : topic}
                               </span>
                             ))}
                           </div>
@@ -160,10 +100,10 @@ const Modules = () => {
                             <div className="flex gap-2">
                               {module.tools.map((tool) => (
                                 <span
-                                  key={tool}
+                                  key={tool.name}
                                   className="px-2 py-1 text-xs font-medium rounded bg-primary/10 text-primary"
                                 >
-                                  {tool}
+                                  {tool.name}
                                 </span>
                               ))}
                             </div>

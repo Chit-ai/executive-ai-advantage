@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const toolCategories = [
   {
@@ -50,7 +52,7 @@ export function ToolsSection() {
         </motion.div>
 
         {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {toolCategories.map((category, index) => (
             <motion.div
               key={category.category}
@@ -76,6 +78,15 @@ export function ToolsSection() {
               </ul>
             </motion.div>
           ))}
+        </div>
+        
+        <div className="text-center">
+          <Button variant="outline" size="lg" asChild>
+            <Link to="/tools">
+              Browse All Tools
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -1,209 +1,42 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Search, Filter, Sparkles, Target, Shield, DollarSign, AlertTriangle, FileText } from "lucide-react";
+import { Copy, Check, Search, Filter, Sparkles, Target, Shield, DollarSign, AlertTriangle, FileText, Factory, Truck, ClipboardList, TrendingUp } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { promptsData } from "@/data/prompts";
 
+// Map categories to icons
 const categories = [
   { id: "all", label: "All Prompts", icon: Sparkles },
-  { id: "strategy", label: "Strategy", icon: Target },
-  { id: "risk", label: "Risk", icon: Shield },
-  { id: "cost", label: "Cost Optimization", icon: DollarSign },
-  { id: "crisis", label: "Crisis Response", icon: AlertTriangle },
-  { id: "board", label: "Board Summaries", icon: FileText },
-];
-
-const prompts = [
-  {
-    id: 1,
-    category: "strategy",
-    title: "Strategic Initiative Analysis",
-    description: "Analyze a strategic initiative and identify key success factors.",
-    prompt: `Act as a Chief Strategy Officer.
-Context: I'm evaluating a strategic initiative for [DESCRIBE INITIATIVE].
-Objective: Analyze this initiative and provide:
-1. Key success factors
-2. Potential roadblocks
-3. Resource requirements
-4. Timeline milestones
-5. Risk mitigation strategies
-Constraints: [ADD BUDGET/TIME/RESOURCE CONSTRAINTS]
-Output: Structured analysis with actionable recommendations.`,
-    tags: ["Strategy", "Analysis", "Planning"],
-  },
-  {
-    id: 2,
-    category: "cost",
-    title: "Cost Reduction Roadmap",
-    description: "Generate a structured cost reduction plan for any department.",
-    prompt: `Act as a COO.
-Context: FMCG company with 4 warehouses facing cost pressure.
-Objective: Reduce inventory holding cost by 15%.
-Constraints: No new capex, 6 months timeline.
-Output: Provide:
-1. 5-step action plan with owners
-2. Quick wins (30 days)
-3. Medium-term initiatives (90 days)
-4. Long-term structural changes (180 days)
-5. Key risks and mitigations`,
-    tags: ["Cost", "Operations", "Action Plan"],
-  },
-  {
-    id: 3,
-    category: "board",
-    title: "Board Summary Generator",
-    description: "Transform lengthy reports into executive board summaries.",
-    prompt: `Act as an Executive Assistant to the CEO.
-Context: [PASTE OR DESCRIBE THE FULL REPORT]
-Objective: Summarize this into a 1-page board note.
-Output Format:
-- Executive Summary (3 lines)
-- Key Findings (bullet points)
-- Critical Risks (with RAG status)
-- Decisions Required
-- Recommended Actions
-Constraints: Maximum 500 words, focus on strategic implications.`,
-    tags: ["Board", "Summary", "Reporting"],
-  },
-  {
-    id: 4,
-    category: "risk",
-    title: "Supplier Risk Assessment",
-    description: "Evaluate and mitigate supplier concentration risks.",
-    prompt: `Act as a Chief Procurement Officer.
-Context: We have a supplier portfolio with [X] critical suppliers.
-Objective: Assess concentration risk and develop mitigation strategies.
-Provide:
-1. Risk scoring framework
-2. Top 5 high-risk supplier profiles
-3. Alternative supplier identification criteria
-4. 90-day risk mitigation action plan
-5. Monitoring KPIs and triggers
-Output: Risk matrix with actionable recommendations.`,
-    tags: ["Risk", "Supply Chain", "Procurement"],
-  },
-  {
-    id: 5,
-    category: "crisis",
-    title: "Crisis Response Framework",
-    description: "Rapid response plan for operational disruptions.",
-    prompt: `Act as a Crisis Management Lead.
-Context: [DESCRIBE THE CRISIS SITUATION]
-Objective: Develop an immediate response plan.
-Provide:
-1. First 4 hours: Immediate actions
-2. 24-48 hours: Stabilization measures
-3. Week 1: Recovery initiatives
-4. Stakeholder communication plan
-5. Post-crisis learning agenda
-Constraints: Minimal disruption to core operations, protect reputation.`,
-    tags: ["Crisis", "Response", "Leadership"],
-  },
-  {
-    id: 6,
-    category: "strategy",
-    title: "Competitive Intelligence Brief",
-    description: "Analyze competitor moves and strategic implications.",
-    prompt: `Act as a Head of Strategy.
-Context: Our competitor [COMPANY] has just [DESCRIBE ACTION].
-Objective: Analyze implications and recommend response.
-Provide:
-1. Competitive impact assessment
-2. Market share implications
-3. Customer perception analysis
-4. Response options (do nothing, match, differentiate)
-5. Recommended strategy with rationale
-Output: Executive brief with scenario analysis.`,
-    tags: ["Strategy", "Competitive", "Market"],
-  },
-  {
-    id: 7,
-    category: "cost",
-    title: "Process Efficiency Analysis",
-    description: "Identify inefficiencies and optimization opportunities.",
-    prompt: `You are an Operations Excellence Head.
-Here is last 6 months process data: [PASTE DATA OR DESCRIBE]
-Identify:
-1. Top 3 inefficiencies with quantified impact
-2. Root causes for each
-3. Corrective actions ranked by ROI
-4. Implementation timeline
-5. Expected savings
-Output: Improvement roadmap with KPIs.`,
-    tags: ["Operations", "Efficiency", "Process"],
-  },
-  {
-    id: 8,
-    category: "risk",
-    title: "Project Risk Assessment",
-    description: "Comprehensive risk identification for major projects.",
-    prompt: `You are a PMO Head.
-Context: [DESCRIBE PROJECT SCOPE AND TIMELINE]
-Objective: Convert this project plan into a risk-aware execution strategy.
-Provide:
-1. RAID log (Risks, Assumptions, Issues, Dependencies)
-2. Risk probability and impact matrix
-3. Mitigation strategies for top 5 risks
-4. Early warning indicators
-5. Escalation protocol
-Output: Risk-adjusted project brief.`,
-    tags: ["Project", "Risk", "PMO"],
-  },
-  {
-    id: 9,
-    category: "board",
-    title: "Quarterly Business Review",
-    description: "Structure a QBR presentation with key insights.",
-    prompt: `Act as a VP of Strategy.
-Context: Q[X] performance data: [PASTE KEY METRICS]
-Objective: Create a QBR executive summary.
-Include:
-1. Performance vs targets (with RAG status)
-2. Key achievements and wins
-3. Challenges and root causes
-4. Strategic priorities for next quarter
-5. Resource/support needs
-6. Key decisions for leadership
-Output: 10-slide presentation outline.`,
-    tags: ["Board", "Review", "Quarterly"],
-  },
-  {
-    id: 10,
-    category: "strategy",
-    title: "Digital Transformation Roadmap",
-    description: "Plan and prioritize digital initiatives.",
-    prompt: `Act as a Chief Digital Officer.
-Context: [DESCRIBE CURRENT STATE AND PAIN POINTS]
-Objective: Develop a 12-month digital transformation roadmap.
-Provide:
-1. Current state assessment
-2. Priority initiatives (quick wins vs strategic)
-3. Technology stack recommendations (free/low-cost)
-4. Change management considerations
-5. Success metrics and milestones
-6. Resource and skill requirements
-Constraints: [BUDGET/TIMELINE CONSTRAINTS]`,
-    tags: ["Digital", "Transformation", "Technology"],
-  },
+  { id: "General Strategy", label: "Strategy", icon: Target },
+  { id: "Operations", label: "Operations", icon: Factory },
+  { id: "Supply Chain", label: "Supply Chain", icon: Truck },
+  { id: "Project Management", label: "Project Mgmt", icon: ClipboardList },
+  { id: "Sales", label: "Sales & Rev", icon: TrendingUp },
 ];
 
 const Prompts = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const filteredPrompts = prompts.filter((prompt) => {
-    const matchesCategory = selectedCategory === "all" || prompt.category === selectedCategory;
+  const filteredPrompts = promptsData.filter((prompt) => {
+    const matchesCategory = selectedCategory === "all" || prompt.category === selectedCategory || (selectedCategory === "Sales" && prompt.category === "Sales");
     const matchesSearch = prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      prompt.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      prompt.context.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prompt.tools.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    // Exact category match for data
+    if (selectedCategory !== "all") {
+       return prompt.category.includes(selectedCategory) && matchesSearch;
+    }
     return matchesCategory && matchesSearch;
   });
 
-  const copyToClipboard = async (prompt: string, id: number) => {
-    await navigator.clipboard.writeText(prompt);
+  const copyToClipboard = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
     setCopiedId(id);
     toast({
       title: "Prompt copied!",
@@ -229,8 +62,7 @@ const Prompts = () => {
                 Executive Prompt Library
               </h1>
               <p className="text-xl text-primary-foreground/70">
-                Battle-tested prompts for strategic decision-making. Copy, customize, and deploy 
-                these frameworks with any AI tool.
+                Battle-tested prompts for strategic decision-making. {promptsData.length}+ frameworks ready to deploy.
               </p>
             </motion.div>
           </div>
@@ -283,21 +115,22 @@ const Prompts = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="p-6 rounded-2xl bg-card border border-border shadow-card hover:shadow-card-hover transition-all"
+                  className="p-6 rounded-2xl bg-card border border-border shadow-card hover:shadow-card-hover transition-all flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
+                        <div className="text-xs font-medium text-gold mb-1 uppercase tracking-wider">{prompt.category}</div>
                       <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
                         {prompt.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        {prompt.description}
+                        {prompt.context}
                       </p>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
+                      onClick={() => copyToClipboard(prompt.prompt_text, prompt.id)}
                       className="flex-shrink-0"
                     >
                       {copiedId === prompt.id ? (
@@ -309,21 +142,21 @@ const Prompts = () => {
                   </div>
 
                   {/* Prompt Preview */}
-                  <div className="relative">
-                    <pre className="p-4 rounded-lg bg-secondary/50 text-sm text-foreground font-mono whitespace-pre-wrap overflow-hidden max-h-48">
-                      {prompt.prompt}
+                  <div className="relative mb-4 flex-grow">
+                     <p className="text-xs text-muted-foreground mb-1">Prompt Pattern:</p>
+                    <pre className="p-4 rounded-lg bg-secondary/50 text-sm text-foreground font-mono whitespace-pre-wrap overflow-hidden max-h-48 overflow-y-auto">
+                      {prompt.prompt_text}
                     </pre>
-                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-secondary/50 to-transparent pointer-events-none" />
                   </div>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {prompt.tags.map((tag) => (
+                  {/* Tools & Tags */}
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    {prompt.tools.map((tool) => (
                       <span
-                        key={tag}
+                        key={tool}
                         className="px-2 py-1 text-xs font-medium rounded bg-gold/10 text-gold"
                       >
-                        {tag}
+                        {tool}
                       </span>
                     ))}
                   </div>
@@ -339,7 +172,7 @@ const Prompts = () => {
           </div>
         </section>
       </main>
-
+      
       <Footer />
     </div>
   );
